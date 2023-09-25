@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
-def open_firefox_and_navigate(url, hot_ultra_login, hot_ultra_pass):
+def open_firefox_and_navigate(url):
     # Create a Firefox WebDriver instance
     firefox_options = webdriver.FirefoxOptions()
     firefox_options.add_argument('--start-maximized')  # Maximize the browser window on start (optional)
@@ -16,6 +16,11 @@ def open_firefox_and_navigate(url, hot_ultra_login, hot_ultra_pass):
 
     # Navigate to the specified URL
     driver.get(url)
+
+    return driver
+
+
+def login(driver, hot_ultra_login, hot_ultra_pass):
     try:
         # Wait for the element to be clickable
         element = WebDriverWait(driver, 60).until(
@@ -47,12 +52,22 @@ def open_firefox_and_navigate(url, hot_ultra_login, hot_ultra_pass):
         )
         login_button.click()
 
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+def tweet(driver, tweet_message):
+    try:
+        # Switch to the post.tech window
+        WebDriverWait(driver, 60).until(EC.number_of_windows_to_be(1))
+        driver.switch_to.window(driver.window_handles[0])
+
         # Locate create new tweet
         tweet_input = WebDriverWait(driver, 60).until(
             EC.visibility_of_element_located((By.XPATH, '//*[@id=":r8:"]'))
         )
         # Enter message
-        tweet_input.send_keys("Hello word!")
+        tweet_input.send_keys(tweet_message)
 
         # Locate and click send button
         send_tweet_button = WebDriverWait(driver, 60).until(
@@ -74,9 +89,11 @@ if __name__ == "__main__":
     load_env(read_file('.env'))
     hot_ultra_login = environ.get("hot_ultra_login")
     hot_ultra_pass = environ.get("hot_ultra_pass")
-    print(hot_ultra_login)
 
     target_url = 'https://post.tech/'
-    driver_path = r'C:\Users\lukas\Desktop\python\geckodriver.exe'  # Replace with the actual path to the GeckoDriver executable
 
-    open_firefox_and_navigate(target_url, hot_ultra_login, hot_ultra_pass)
+    tweet_message = 'Hello, world!'
+    driver = open_firefox_and_navigate(target_url)
+
+    login(driver, hot_ultra_login, hot_ultra_pass)
+    tweet(driver, tweet_message)
