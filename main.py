@@ -116,9 +116,8 @@ def reply_posttech(driver, reply_message):
 
         # Locate reply window
         locate_reply_window = WebDriverWait(driver, 60).until(
-            EC.visibility_of_element_located((By.XPATH, '//*[@id=":rj2:"]'))
+            EC.visibility_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="Post your reply"]'))
         )
-        locate_reply_window.click()
 
         # Enter the reply message
         locate_reply_window.send_keys("hola amigo! *.*")
