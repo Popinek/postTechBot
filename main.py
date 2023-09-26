@@ -124,7 +124,7 @@ def reply_posttech(driver, reply_message):
 
         # Locate and click submit button
         send_reply_button = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="headlessui-dialog-panel-:rj0:"]/form/label/div/div[2]/div[2]/button'))
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/div[2]/div/div[1]/div/form/label/div/div[2]/div[2]/button'))
         )
         send_reply_button.click()
 
