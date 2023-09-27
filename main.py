@@ -59,25 +59,36 @@ def login(driver, hot_ultra_login, hot_ultra_pass):
         print(f"An error occurred: {e}")
 
 
-
-def tweet_posttech(driver, tweet_message):
+def tweet_posttech(driver, tweet_message, num_tweets=2):
     try:
+
         # Switch to the post.tech window
         WebDriverWait(driver, 60).until(EC.number_of_windows_to_be(1))
         driver.switch_to.window(driver.window_handles[0])
 
-        # Locate create new tweet
-        tweet_input = WebDriverWait(driver, 60).until(
-            EC.visibility_of_element_located((By.XPATH, '//*[@id=":r8:"]'))
-        )
-        # Enter message
-        tweet_input.send_keys(tweet_message)
+        # Create X number of tweets
+        for _ in range(num_tweets):
 
-        # Locate and click send button
-        send_tweet_button = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[2]/div/main/form/label/div/div[2]/div[2]/button'))
-        )
-        send_tweet_button.click()
+            # Locate create new tweet
+            tweet_input = WebDriverWait(driver, 60).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="What\'s happening?"]'))
+            )
+            # Enter message
+            tweet_input.send_keys(tweet_message)
+
+            # Locate and click send button
+            send_tweet_button = WebDriverWait(driver, 60).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.custom-button[type="submit"]'))
+            )
+            send_tweet_button.click()
+
+            print("You tweeted:", tweet_message)
+
+            # Go back to the home page to create next tweet
+            driver.get("https://post.tech/home")
+
+            # Wait to load web page
+            time.sleep(10)
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -135,6 +146,9 @@ def reply_posttech(driver, reply_message, num_messages=2):
             # Go back to the home page to reply to the next message
             driver.get("https://post.tech/home")
 
+            # Wait to load web page
+            time.sleep(10)
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -154,9 +168,10 @@ if __name__ == "__main__":
     target_url = 'https://post.tech/'
 
     #tweet_message = gptTweet(openai_api_key)
+    tweet_message = "Hey"
     reply_message = "I agree"
     driver = open_firefox_and_navigate(target_url)
 
     login(driver, hot_ultra_login, hot_ultra_pass)
-    reply_posttech(driver, reply_message)
-    #tweet_posttech(driver, tweet_message)
+    #reply_posttech(driver, reply_message)
+    tweet_posttech(driver, tweet_message)
