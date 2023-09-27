@@ -88,7 +88,7 @@ def tweet_posttech(driver, tweet_message):
     driver.quit()
 
 
-def reply_posttech(driver, reply_message):
+def reply_posttech(driver, reply_message, num_messages=2):
     try:
 
         # Switch to the post.tech window
@@ -97,36 +97,43 @@ def reply_posttech(driver, reply_message):
         # Go to Homepage
         WebDriverWait(driver, 60).until(EC.url_to_be("https://post.tech/home"))
 
-        # Locate the element by class name
-        element = WebDriverWait(driver, 60).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, '.whitespace-pre-line.break-words'))
-             )
+        # Find and reply to the first 'num_messages' messages
+        for _ in range(num_messages):
 
-        # Read the tweet
-        read_tweet = element.text
-        print("Message:", read_tweet)
+            # Locate the element by class name
+            element = WebDriverWait(driver, 60).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, '.whitespace-pre-line.break-words'))
+                 )
 
-        # Reply to the tweet
+            # Read the tweet
+            read_tweet = element.text
+            print("Message:", read_tweet)
 
-        # Locate and click message button
-        locate_message_button = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[2]/div/main/section/div/div/div[1]/article/div/span/div/div[2]/div[2]/div/button[1]'))
-        )
-        locate_message_button.click()
+            # Reply to the tweet
 
-        # Locate reply window
-        locate_reply_window = WebDriverWait(driver, 60).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="Post your reply"]'))
-        )
+            # Locate and click message button
+            locate_message_button = WebDriverWait(driver, 60).until(
+                EC.visibility_of_element_located((By.XPATH, '/html/body/div/div[2]/div/main/section/div/div/div[1]/article/div/span/div/div[2]/div[2]/div/button[1]'))
+            )
+            locate_message_button.click()
 
-        # Enter the reply message
-        locate_reply_window.send_keys("hola amigo! *.*")
+            # Locate reply window
+            locate_reply_window = WebDriverWait(driver, 60).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="Post your reply"]'))
+            )
 
-        # Locate and click submit button
-        send_reply_button = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/div[2]/div/div[1]/div/form/label/div/div[2]/div[2]/button'))
-        )
-        send_reply_button.click()
+            # Enter the reply message
+            locate_reply_window.send_keys(reply_message)
+
+            # Locate and click submit button
+            send_reply_button = WebDriverWait(driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/div[2]/div/div[1]/div/form/label/div/div[2]/div[2]/button'))
+            )
+            send_reply_button.click()
+            print("Message:", reply_message)
+
+            # Go back to the home page to reply to the next message
+            driver.get("https://post.tech/home")
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -147,7 +154,7 @@ if __name__ == "__main__":
     target_url = 'https://post.tech/'
 
     #tweet_message = gptTweet(openai_api_key)
-    reply_message = "hey how you doing lil bro"
+    reply_message = "I agree"
     driver = open_firefox_and_navigate(target_url)
 
     login(driver, hot_ultra_login, hot_ultra_pass)
