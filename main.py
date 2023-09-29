@@ -161,17 +161,23 @@ def reply_posttech(driver, reply_message, num_messages=2):
 # Example usage:
 if __name__ == "__main__":
     load_env(read_file('.env'))
-    hot_ultra_login = environ.get("hot_ultra_login")
-    hot_ultra_pass = environ.get("hot_ultra_pass")
-    #openai_api_key = environ.get("gpt")
+    username = environ.get("username").split(',')
+    password = environ.get("password").split(',')
+    # openai_api_key = environ.get("gpt")
 
     target_url = 'https://post.tech/'
 
-    #tweet_message = gptTweet(openai_api_key)
+    # tweet_message = gptTweet(openai_api_key)
     tweet_message = "Hey"
-    reply_message = "I agree"
-    driver = open_firefox_and_navigate(target_url)
 
-    login(driver, hot_ultra_login, hot_ultra_pass)
-    #reply_posttech(driver, reply_message)
-    tweet_posttech(driver, tweet_message)
+    # reply_message = gptReply(openai_api_key)
+    reply_message = "I agree"
+
+    for user, password in zip(username, password):
+
+        driver = open_firefox_and_navigate(target_url)
+
+        login(driver, username, password)
+
+        # Reply_posttech(driver, reply_message)
+        tweet_posttech(driver, tweet_message)
