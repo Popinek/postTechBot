@@ -59,7 +59,7 @@ def login(driver, hot_ultra_login, hot_ultra_pass):
         print(f"An error occurred: {e}")
 
 
-def tweet_posttech(driver, tweet_message, num_tweets=2):
+def tweet_posttech(driver, tweet, num_tweets=2):
     try:
 
         # Switch to the post.tech window
@@ -74,7 +74,7 @@ def tweet_posttech(driver, tweet_message, num_tweets=2):
                 EC.visibility_of_element_located((By.CSS_SELECTOR, 'textarea[placeholder="What\'s happening?"]'))
             )
             # Enter message
-            tweet_input.send_keys(tweet_message)
+            tweet_input.send_keys(tweet)
 
             # Locate and click send button
             send_tweet_button = WebDriverWait(driver, 60).until(
@@ -82,24 +82,27 @@ def tweet_posttech(driver, tweet_message, num_tweets=2):
             )
             send_tweet_button.click()
 
-            print("You tweeted:", tweet_message)
+            print("You tweeted:", tweet)
+
+            # Wait to load tweet
+            time.sleep(3)
 
             # Go back to the home page to create next tweet
             driver.get("https://post.tech/home")
 
             # Wait to load web page
-            time.sleep(10)
+            time.sleep(3)
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
     # You can add further actions or interactions with the webpage here.
-    time.sleep(10000)
+    time.sleep(3)
     # Close the browser when done
     driver.quit()
 
 
-def reply_posttech(driver, reply_message, num_messages=2):
+def reply_posttech(driver, reply, num_messages=2):
     try:
 
         # Switch to the post.tech window
@@ -134,26 +137,29 @@ def reply_posttech(driver, reply_message, num_messages=2):
             )
 
             # Enter the reply message
-            locate_reply_window.send_keys(reply_message)
+            locate_reply_window.send_keys(reply)
 
             # Locate and click submit button
             send_reply_button = WebDriverWait(driver, 60).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/div[2]/div/div[1]/div/form/label/div/div[2]/div[2]/button'))
             )
             send_reply_button.click()
-            print("Message:", reply_message)
+            print("Message:", reply)
+
+            # Wait to load reply
+            time.sleep(3)
 
             # Go back to the home page to reply to the next message
             driver.get("https://post.tech/home")
 
             # Wait to load web page
-            time.sleep(10)
+            time.sleep(3)
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
     # You can add further actions or interactions with the webpage here.
-    time.sleep(10000)
+    time.sleep(3)
     # Close the browser when done
     driver.quit()
 
@@ -173,11 +179,11 @@ if __name__ == "__main__":
     # reply_message = gptReply(openai_api_key)
     reply_message = "I agree"
 
-    for user, password in zip(username, password):
+    for username, password in zip(username, password):
 
-        driver = open_firefox_and_navigate(target_url)
+        driver_helper = open_firefox_and_navigate(target_url)
 
-        login(driver, username, password)
+        login(driver_helper, username, password)
 
-        # Reply_posttech(driver, reply_message)
-        tweet_posttech(driver, tweet_message)
+        reply_posttech(driver_helper, reply_message)
+        #tweet_posttech(driver_helper, tweet_message)
