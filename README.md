@@ -62,23 +62,20 @@ Welcome to **PostTechBot**! This is a Python script designed to automate interac
 
    - Obtain your API key from the OpenAI platform.
 
-   - Set your API key as an environment variable:
-
-     ```shell
-     export OPENAI_API_KEY=your_api_key
-     ```
+   - Put your API key to .env file
 
 8. Run the script:
 
    ```shell
-   python posttechbot.py
+   python main.py
    ```
 
    This will start the automation process.
 
 ## Configuration
 
-- You can customize the tweet and reply messages by modifying the `tweet_message` and `reply_message` variables in the script.
+- You can customize the tweet and reply messages by modifying the `tweet_message` and `reply_message` variables in the script or delete these and uncomment the commented ones to work with gpt, also set up your persona and prompt
+  
 
 ## Dependencies
 
